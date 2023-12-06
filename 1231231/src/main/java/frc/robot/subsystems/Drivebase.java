@@ -14,20 +14,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public Drivebase() {}
+  public Drivebase() {
+    configMotors();
+  }
 
   CANSparkMax m_leftSlave = new CANSparkMax(1, MotorType.kBrushless);
   CANSparkMax m_leftMaster = new CANSparkMax(2, MotorType.kBrushless);
   CANSparkMax m_rightSlave = new CANSparkMax(3, MotorType.kBrushless);
   CANSparkMax m_rightMaster = new CANSparkMax(4, MotorType.kBrushless);
 
-  MotorControllerGroup m_leftGroup = new MotorControllerGroup(m_leftSlave, m_leftMaster);
-  MotorControllerGroup m_rightGroup = new MotorControllerGroup(m_rightSlave, m_rightMaster);
+  DifferentialDrive m_DifferentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster);
 
-  DifferentialDrive m_DifferentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
+  public void configMotors(){
+    m_leftSlave.follow(m_leftMaster);
+    m_rightSlave.follow(m_rightMaster);
 
-  m_leftSlave.follow(m_leftMaster);
-
+    m_leftMaster.setInverted(true);
+    m_leftSlave.setInverted(m_leftMaster.getInverted());
+  }
 
 
   /**
