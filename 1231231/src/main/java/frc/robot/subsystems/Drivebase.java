@@ -33,8 +33,10 @@ public class Drivebase extends SubsystemBase {
     m_leftMaster.setInverted(true);
     m_leftSlave.setInverted(m_leftMaster.getInverted());
 
-    m_leftMaster.restoreFactoryDefaults();
+    m_leftMaster.restoreFactoryDefaults();   
     m_leftSlave.restoreFactoryDefaults();
+    m_rightMaster.restoreFactoryDefaults();   
+    m_rightSlave.restoreFactoryDefaults();
     
 
     m_leftMaster.setIdleMode(IdleMode.kBrake);
@@ -42,7 +44,10 @@ public class Drivebase extends SubsystemBase {
     m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
     m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
 
-
+    //set smartcurrentlimit to 40 
+    //write in a comment the difference between stalllimit and freelimit
+    //create a simple arcade drive method that limits the speed by half
+    //teach emma 
 
   }
 
@@ -59,6 +64,14 @@ public class Drivebase extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
+        });
+  }
+  public CommandBase die() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          m_DifferentialDrive.arcadeDrive(1, 0);
         });
   }
 
