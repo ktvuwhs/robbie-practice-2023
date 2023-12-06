@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -31,7 +32,20 @@ public class Drivebase extends SubsystemBase {
 
     m_leftMaster.setInverted(true);
     m_leftSlave.setInverted(m_leftMaster.getInverted());
+
+    m_leftMaster.restoreFactoryDefaults();
+    m_leftSlave.restoreFactoryDefaults();
+    
+
+    m_leftMaster.setIdleMode(IdleMode.kBrake);
+    m_leftSlave.setIdleMode(m_leftMaster.getIdleMode());
+    m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
+    m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
+
+
+
   }
+
 
 
   /**
