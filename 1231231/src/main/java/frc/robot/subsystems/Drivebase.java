@@ -12,21 +12,28 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax.IdleMode;
+import frc.robot.Constants.DrivebaseConstants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.MotorIDConstants;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public Drivebase() {
-    configMotors();
+    configMotors();  //
   }
 
-  CANSparkMax m_leftSlave = new CANSparkMax(1, MotorType.kBrushless);
-  CANSparkMax m_leftMaster = new CANSparkMax(2, MotorType.kBrushless);
-  CANSparkMax m_rightSlave = new CANSparkMax(3, MotorType.kBrushless);
-  CANSparkMax m_rightMaster = new CANSparkMax(4, MotorType.kBrushless);
 
-  DifferentialDrive m_DifferentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster);
+  CANSparkMax m_leftSlave = new CANSparkMax(MotorIDConstants.kLeftSlave, MotorType.kBrushless);  //brushless > brush
+  CANSparkMax m_leftMaster = new CANSparkMax(MotorIDConstants.kLeftMaster, MotorType.kBrushless);
+  CANSparkMax m_rightSlave = new CANSparkMax(MotorIDConstants.kRightSlave, MotorType.kBrushless);
+  CANSparkMax m_rightMaster = new CANSparkMax(MotorIDConstants.kRightMaster, MotorType.kBrushless);
 
-  public void configMotors(){
+  RelativeEncoder m_leftEncoder  = m_leftMaster.getEncoder(Type.kQuadrature,DrivebaseConstants.kCountsPerRev);
+  RelativeEncoder m_rightEncoder = m_rightMaster.getEncoder(Type.kQuadrature,DrivebaseConstants.kCountsPerRev);
+
+  DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster);
+
+  public void configMotors(){  
     m_leftSlave.follow(m_leftMaster);
     m_rightSlave.follow(m_rightMaster);
 
@@ -44,13 +51,16 @@ public class Drivebase extends SubsystemBase {
     m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
     m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
 
-    //set smartcurrentlimit to 40 
-    //write in a comment the difference between stalllimit and freelimit
-    //create a simple arcade drive method that limits the speed by half
-    //teach emma 
+    m_leftMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+    m_leftSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit)
+    m_rightMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+    m_rightSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+
+
+    //stallimit - minimum amount of torque that the motor needs to "break the stall" 
+    //free - maximum amount of power distributed into the motor
 
   }
-
 
 
   /**
@@ -84,6 +94,33 @@ public class Drivebase extends SubsystemBase {
    *
    */
 
+   public limitedArcadeDrive(double speed, double rotation){   //runs arcade drive
+      m_differentialDrive.arcadeDrive(speed*0.5, rotation*0.5); //half power so motors don't burn out
+   }
+
+    public arcadeDrive(double speed, double rotation){
+      m_differentialDrive.arcadeDrive(speed, rotation); //full power when u need more power
+   }
+
+   public double getAverageDistance(){ // the left distance + right distance divided by two to get the average distance of both encoders
+      return (getLeftDistance() + getRightDistance())/2;
+   }
+
+  public double getLeftDistance(){ 
+      double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //stores the circumference variable; circumference = 
+      double revolutions = (m_leftEncoder.getPosition() / m_leftEncoder.getCountsPerRevolution());
+      //distance = circumference * revolutions  (ARC LENGTH)
+      return (circumference * revolution);
+  }
+
+  public double getRightDistance(){
+    double circumference = MATH.PI * DrivebaseConstants.kWheelDiameterInches;
+    double revolutions = m_rightEncoder.getPosition() / m_rightEncoder.getCountsPerRevolution();
+    return (circumference * revolution);
+  }
+
+
+
   
   public boolean exampleCondition() {
     // Query some boolean state, such as a digital sensor.
@@ -93,6 +130,9 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("left distance", getLeftDistance());
+    SmartDashboard.putNumber("right distance", getRightDistance());
+    SmartDashboard.putNumber("average distance", getAverageDistance());
   }
 
   @Override
