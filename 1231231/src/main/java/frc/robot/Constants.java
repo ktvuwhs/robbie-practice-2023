@@ -17,7 +17,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public class DrivebaseConstants {
+  public class DrivebaseConstants {  
     public static final int kCountsPerRev = 42;
     public static final int kStallLimit = 40;
     public static final int kFreeLimit = 40;
@@ -25,7 +25,7 @@ public final class Constants {
   
   }
 
-   public class MotorIDConstants {
+   public class MotorIDConstants {   
     public static final int kLeftSlave = 1;
     public static final int kLeftMaster = 2;
     public static final int kRightSlave = 3;

@@ -22,36 +22,36 @@ public class Drivebase extends SubsystemBase {
     configMotors();  //
   }
 
-
+  
   CANSparkMax m_leftSlave = new CANSparkMax(MotorIDConstants.kLeftSlave, MotorType.kBrushless);  //brushless > brush
   CANSparkMax m_leftMaster = new CANSparkMax(MotorIDConstants.kLeftMaster, MotorType.kBrushless);
   CANSparkMax m_rightSlave = new CANSparkMax(MotorIDConstants.kRightSlave, MotorType.kBrushless);
   CANSparkMax m_rightMaster = new CANSparkMax(MotorIDConstants.kRightMaster, MotorType.kBrushless);
 
-  RelativeEncoder m_leftEncoder  = m_leftMaster.getEncoder(Type.kQuadrature,DrivebaseConstants.kCountsPerRev);
+  RelativeEncoder m_leftEncoder  = m_leftMaster.getEncoder(Type.kQuadrature,DrivebaseConstants.kCountsPerRev);  //creates an encoder 
   RelativeEncoder m_rightEncoder = m_rightMaster.getEncoder(Type.kQuadrature,DrivebaseConstants.kCountsPerRev);
 
-  DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster);
+  DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster); //MAKE NEW DRIVEBASE
 
   public void configMotors(){  
-    m_leftSlave.follow(m_leftMaster);
+    m_leftSlave.follow(m_leftMaster); //slave motor 
     m_rightSlave.follow(m_rightMaster);
 
-    m_leftMaster.setInverted(true);
+    m_leftMaster.setInverted(true); //invert motor 
     m_leftSlave.setInverted(m_leftMaster.getInverted());
 
-    m_leftMaster.restoreFactoryDefaults();   
+    m_leftMaster.restoreFactoryDefaults();   //restores factor defeault defeault
     m_leftSlave.restoreFactoryDefaults();
     m_rightMaster.restoreFactoryDefaults();   
     m_rightSlave.restoreFactoryDefaults();
     
 
-    m_leftMaster.setIdleMode(IdleMode.kBrake);
+    m_leftMaster.setIdleMode(IdleMode.kBrake);              //sets break or coast
     m_leftSlave.setIdleMode(m_leftMaster.getIdleMode());
     m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
     m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
 
-    m_leftMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+    m_leftMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit); //sets stall and free limits 
     m_leftSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit)
     m_rightMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
     m_rightSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
@@ -114,9 +114,9 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double getRightDistance(){
-    double circumference = MATH.PI * DrivebaseConstants.kWheelDiameterInches;
-    double revolutions = m_rightEncoder.getPosition() / m_rightEncoder.getCountsPerRevolution();
-    return (circumference * revolution);
+    double circumference = MATH.PI * DrivebaseConstants.kWheelDiameterInches; //FINDS CIRCUMFRENCE
+    double revolutions = m_rightEncoder.getPosition() / m_rightEncoder.getCountsPerRevolution(); //FINDS REVOLUTION
+    return (circumference * revolution); //GETS DISTANCE BY MULTIPLYING CIRCUMFRENCE AND REVOLUTIONS
   }
 
 
@@ -130,9 +130,9 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("left distance", getLeftDistance());
-    SmartDashboard.putNumber("right distance", getRightDistance());
-    SmartDashboard.putNumber("average distance", getAverageDistance());
+    SmartDashboard.putNumber("left distance", getLeftDistance()); //DISPLAYS LEFT DISTANCE
+    SmartDashboard.putNumber("right distance", getRightDistance()); //DISPLAYS RIGHT DISTANCE
+    SmartDashboard.putNumber("average distance", getAverageDistance()); //DISPLAYS AVERAGE DISTANCE
   }
 
   @Override
