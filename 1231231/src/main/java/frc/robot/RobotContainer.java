@@ -7,10 +7,18 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import org.ejml.equation.IntegerSequence.For;
+
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Forward;
+import frc.robot.commands.Backward;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,6 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Drivebase m_Drivebase = new Drivebase();
+  XboxController m_XboxController = new XboxController(0);
+  private final Forward m_Forward = new Forward(m_Drivebase, 1);
+  private final Backward m_Backward = new Backward(m_Drivebase, 1)
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
