@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import frc.robot.Constants.DrivebaseConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.MotorIDConstants;
+import frc.robot.Constants.GearRatioConstants;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -34,6 +35,9 @@ public class Drivebase extends SubsystemBase {
   RelativeEncoder m_rightEncoder = m_rightMaster.getAlternateEncoder(DrivebaseConstants.kCountsPerRev); 
 
   DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster); //MAKE NEW DRIVEBASE
+
+  public PIDController m_PIDController = m_leftMaster.getPIDController();
+  
 
   public void configMotors(){  
     m_leftSlave.follow(m_leftMaster); //slave motor 
@@ -112,7 +116,7 @@ public class Drivebase extends SubsystemBase {
       double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //stores the circumference variable; circumference = 
       double revolutions = (m_leftEncoder.getPosition() / m_leftEncoder.getCountsPerRevolution());
       //distance = circumference * revolutions  (ARC LENGTH)
-      return (circumference * revolutions);
+      return (circumference * revolutions)/GearRatioConstants.kGearRatio;
   }
 
   public double getRightDistance(){

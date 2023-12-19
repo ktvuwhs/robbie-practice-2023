@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Forward;
-import frc.robot.commands.Backward;
+import frc.robot.commands.Straight;
+
 
 
 /**
@@ -31,8 +31,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivebase m_Drivebase = new Drivebase();
   XboxController m_XboxController = new XboxController(0);
-  private final Forward m_Forward = new Forward(m_Drivebase, 1);
-  private final Backward m_Backward = new Backward(m_Drivebase, 1)
+  private final Straight m_Straight = new Straight(m_Drivebase, 1);
+ 
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -71,6 +71,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.blueSide(m_Drivebase);
   }
 }

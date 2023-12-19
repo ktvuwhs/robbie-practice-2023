@@ -31,5 +31,15 @@ public final class Constants {
     public static final int kRightSlave = 3;
     public static final int kRightMaster = 4;
   }
+
+  public class GearRatioConstants {
+    public static final int kGearRatio = 4;
+  }
+
+  public class PIDControllerConstants {
+    public static final double Kp = 0;
+    public static final double Ki = 0;
+    public static final double Kd = 0;
+  }
 }
  
