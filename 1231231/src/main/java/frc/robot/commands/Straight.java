@@ -14,8 +14,9 @@ import frc.robot.Constants.PIDControllerConstants;
 public class Straight extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   //PIDController m_PIDController = new PIDController(PIDControllerConstants.Kp,PIDControllerConstants.Ki,PIDControllerConstants.Kd);
-  private final Drivebase m_db;
-  private double m_distance;
+  private Drivebase m_db;
+  SparkMaxPIDController m_PIDController = new SparkMaxPIDController();
+  
 
   /**
    * Creates a new ExampleCommand.

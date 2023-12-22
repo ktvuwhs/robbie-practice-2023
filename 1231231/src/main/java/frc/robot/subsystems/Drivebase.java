@@ -21,11 +21,9 @@ import frc.robot.Constants.GearRatioConstants;
 
 public class Drivebase extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public Drivebase() {
-    configMotors();  //
-  }
+ 
+  public static Drivebase m_instance = new Drivebase();
 
-  
   CANSparkMax m_leftSlave = new CANSparkMax(MotorIDConstants.kLeftSlave, MotorType.kBrushless);  //brushless > brush
   CANSparkMax m_leftMaster = new CANSparkMax(MotorIDConstants.kLeftMaster, MotorType.kBrushless);
   CANSparkMax m_rightSlave = new CANSparkMax(MotorIDConstants.kRightSlave, MotorType.kBrushless);
@@ -36,8 +34,10 @@ public class Drivebase extends SubsystemBase {
 
   DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster); //MAKE NEW DRIVEBASE
 
-  public PIDController m_PIDController = m_leftMaster.getPIDController();
-  
+   public Drivebase() {
+    configMotors();  //
+  }
+
 
   public void configMotors(){  
     m_leftSlave.follow(m_leftMaster); //slave motor 
@@ -64,8 +64,7 @@ public class Drivebase extends SubsystemBase {
 
 
     //stallimit - minimum amount of torque that the motor needs to "break the stall" 
-    //free - maximum amount of power distributed into the motor
-
+    //free - maximum amount of power distributed into the moto
   }
 
 
@@ -129,6 +128,12 @@ public class Drivebase extends SubsystemBase {
     m_leftEncoder.setPosition(0);
     m_rightEncoder.setPosition(0);
   }
+  
+  public void LogData(){
+    SmartDashboard.putNumber("left distance", getLeftDistance()); //DISPLAYS LEFT DISTANCE
+    SmartDashboard.putNumber("right distance", getRightDistance()); //DISPLAYS RIGHT DISTANCE
+    SmartDashboard.putNumber("average distance", getAverageDistance()); //DISPLAYS AVERAGE DISTANCE
+  }
 
 
 
@@ -140,10 +145,7 @@ public class Drivebase extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("left distance", getLeftDistance()); //DISPLAYS LEFT DISTANCE
-    SmartDashboard.putNumber("right distance", getRightDistance()); //DISPLAYS RIGHT DISTANCE
-    SmartDashboard.putNumber("average distance", getAverageDistance()); //DISPLAYS AVERAGE DISTANCE
+      LogData();
   }
 
   @Override
