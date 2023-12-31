@@ -19,137 +19,142 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.MotorIDConstants;
 import frc.robot.Constants.GearRatioConstants;
 
-public class Drivebase extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
- 
-  public static Drivebase m_instance = new Drivebase();
+public class Drivebase extends SubsystemBase implements SingletonSubsystem {
+    /** Creates a new ExampleSubsystem. */
 
-  CANSparkMax m_leftSlave = new CANSparkMax(MotorIDConstants.kLeftSlave, MotorType.kBrushless);  //brushless > brush
-  CANSparkMax m_leftMaster = new CANSparkMax(MotorIDConstants.kLeftMaster, MotorType.kBrushless);
-  CANSparkMax m_rightSlave = new CANSparkMax(MotorIDConstants.kRightSlave, MotorType.kBrushless);
-  CANSparkMax m_rightMaster = new CANSparkMax(MotorIDConstants.kRightMaster, MotorType.kBrushless);
+    private static Drivebase m_instance;
 
-  RelativeEncoder m_leftEncoder  = m_leftMaster.getAlternateEncoder(DrivebaseConstants.kCountsPerRev);  //creates an encoder 
-  RelativeEncoder m_rightEncoder = m_rightMaster.getAlternateEncoder(DrivebaseConstants.kCountsPerRev); 
+    CANSparkMax m_leftSlave = new CANSparkMax(MotorIDConstants.kLeftSlave, MotorType.kBrushless);  //brushless > brush
+    CANSparkMax m_leftMaster = new CANSparkMax(MotorIDConstants.kLeftMaster, MotorType.kBrushless);
+    CANSparkMax m_rightSlave = new CANSparkMax(MotorIDConstants.kRightSlave, MotorType.kBrushless);
+    CANSparkMax m_rightMaster = new CANSparkMax(MotorIDConstants.kRightMaster, MotorType.kBrushless);
 
-  DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster); //MAKE NEW DRIVEBASE
+    RelativeEncoder m_leftEncoder  = m_leftMaster.getAlternateEncoder(DrivebaseConstants.kCountsPerRev);  //creates an encoder 
+    RelativeEncoder m_rightEncoder = m_rightMaster.getAlternateEncoder(DrivebaseConstants.kCountsPerRev); 
 
-   public Drivebase() {
-    configMotors();  //
-  }
+    DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster,m_rightMaster); //MAKE NEW DRIVEBASE
 
+    private Drivebase() {
+        configMotors();  //
+    }
 
-  public void configMotors(){  
-    m_leftSlave.follow(m_leftMaster); //slave motor 
-    m_rightSlave.follow(m_rightMaster);
+    public static Drivebase getInstance() {
+        if (m_instance == null) { m_instance = new Drivebase(); }
+        return m_instance;
+    }
 
-    m_leftMaster.setInverted(true); //invert motor 
-    m_leftSlave.setInverted(m_leftMaster.getInverted());
+    @Override
+    public void configMotors() {  
+        m_leftSlave.follow(m_leftMaster); //slave motor 
+        m_rightSlave.follow(m_rightMaster);
 
-    m_leftMaster.restoreFactoryDefaults();   //restores factor defeault defeault
-    m_leftSlave.restoreFactoryDefaults();
-    m_rightMaster.restoreFactoryDefaults();   
-    m_rightSlave.restoreFactoryDefaults();
-    
+        m_leftMaster.setInverted(true); //invert motor 
+        m_leftSlave.setInverted(m_leftMaster.getInverted());
 
-    m_leftMaster.setIdleMode(IdleMode.kBrake);              //sets break or coast
-    m_leftSlave.setIdleMode(m_leftMaster.getIdleMode());
-    m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
-    m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
-
-    m_leftMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit); //sets stall and free limits 
-    m_leftSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
-    m_rightMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
-    m_rightSlave.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+        m_leftMaster.restoreFactoryDefaults();   //restores factor defeault defeault
+        m_leftSlave.restoreFactoryDefaults();
+        m_rightMaster.restoreFactoryDefaults();   
+        m_rightSlave.restoreFactoryDefaults();
 
 
-    //stallimit - minimum amount of torque that the motor needs to "break the stall" 
-    //free - maximum amount of power distributed into the moto
-  }
+        m_leftMaster.setIdleMode(IdleMode.kBrake);              //sets break or coast
+        m_leftSlave.setIdleMode(m_leftMaster.getIdleMode());
+        m_rightMaster.setIdleMode(m_leftMaster.getIdleMode());
+        m_rightSlave.setIdleMode(m_leftMaster.getIdleMode());
+
+        m_leftMaster.setSmartCurrentLimit (DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit); //sets stall and free limits 
+        m_leftSlave.setSmartCurrentLimit  (DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+        m_rightMaster.setSmartCurrentLimit(DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
+        m_rightSlave.setSmartCurrentLimit (DrivebaseConstants.kStallLimit,DrivebaseConstants.kFreeLimit);
 
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public CommandBase exampleMethodCommand() {
+        //stallimit - minimum amount of torque that the motor needs to "break the stall" 
+        //free - maximum amount of power distributed into the moto
+    }
+
+
+    /**
+     * Example command factory method.
+     *
+     * @return a command
+     */
+    public CommandBase exampleMethodCommand() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          /* one-time action goes here */
+            /* one-time action goes here */
         });
-  }
-  public CommandBase die() {
+    }
+    public CommandBase die() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          
+            
         });
-  }
+    }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   * 
-   * 
-   *
-   */
+    /**
+     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+     *
+     * @return value of some boolean subsystem state, such as a digital sensor.
+     * 
+     * 
+     *
+     */
 
-   public void limitedArcadeDrive(double speed, double rotation){   //runs arcade drive
-      m_differentialDrive.arcadeDrive(speed*0.5, rotation*0.5); //half power so motors don't burn out
-   }
+    public void limitedArcadeDrive(double speed, double rotation) {   //runs arcade drive
+        m_differentialDrive.arcadeDrive(speed*0.5, rotation*0.5); //half power so motors don't burn out
+    }
 
-    public void arcadeDrive(double speed, double rotation){
-      m_differentialDrive.arcadeDrive(speed, rotation); //full power when u need more power
-   }
+    public void arcadeDrive(double speed, double rotation) {
+        m_differentialDrive.arcadeDrive(speed, rotation); //full power when u need more power
+    }
 
-   public double getAverageDistance(){ // the left distance + right distance divided by two to get the average distance of both encoders
-      return (getLeftDistance() + getRightDistance())/2;
-   }
+    public double getAverageDistance() { // the left distance + right distance divided by two to get the average distance of both encoders
+        return (getLeftDistance() + getRightDistance())/2;
+    }
 
-  public double getLeftDistance(){ 
-      double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //stores the circumference variable; circumference = 
-      double revolutions = (m_leftEncoder.getPosition() / m_leftEncoder.getCountsPerRevolution());
-      //distance = circumference * revolutions  (ARC LENGTH)
-      return (circumference * revolutions)/GearRatioConstants.kGearRatio;
-  }
+    public double getLeftDistance() { 
+        double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //stores the circumference variable; circumference = 
+        double revolutions = (m_leftEncoder.getPosition() / m_leftEncoder.getCountsPerRevolution());
+        //distance = circumference * revolutions  (ARC LENGTH)
+        return (circumference * revolutions)/GearRatioConstants.kGearRatio;
+    }
 
-  public double getRightDistance(){
-    double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //FINDS CIRCUMFRENCE
-    double revolutions = m_rightEncoder.getPosition() / m_rightEncoder.getCountsPerRevolution(); //FINDS REVOLUTION
-    return (circumference * revolutions); //GETS DISTANCE BY MULTIPLYING CIRCUMFRENCE AND REVOLUTIONS
-  }
+    public double getRightDistance() {
+        double circumference = Math.PI * DrivebaseConstants.kWheelDiameterInches; //FINDS CIRCUMFRENCE
+        double revolutions = m_rightEncoder.getPosition() / m_rightEncoder.getCountsPerRevolution(); //FINDS REVOLUTION
+        return (circumference * revolutions); //GETS DISTANCE BY MULTIPLYING CIRCUMFRENCE AND REVOLUTIONS
+    }
 
-  public void resetEncoders(){
-    m_leftEncoder.setPosition(0);
-    m_rightEncoder.setPosition(0);
-  }
-  
-  public void LogData(){
-    SmartDashboard.putNumber("left distance", getLeftDistance()); //DISPLAYS LEFT DISTANCE
-    SmartDashboard.putNumber("right distance", getRightDistance()); //DISPLAYS RIGHT DISTANCE
-    SmartDashboard.putNumber("average distance", getAverageDistance()); //DISPLAYS AVERAGE DISTANCE
-  }
+    public void resetEncoders() {
+        m_leftEncoder.setPosition(0);
+        m_rightEncoder.setPosition(0);
+    }
+
+    public void LogData() {
+        SmartDashboard.putNumber("left distance", getLeftDistance()); //DISPLAYS LEFT DISTANCE
+        SmartDashboard.putNumber("right distance", getRightDistance()); //DISPLAYS RIGHT DISTANCE
+        SmartDashboard.putNumber("average distance", getAverageDistance()); //DISPLAYS AVERAGE DISTANCE
+    }
 
 
 
-  
-  public boolean exampleCondition() {
+
+    public boolean exampleCondition() {
     // Query some boolean state, such as a digital sensor.
     return false;
-  }
+    }
 
-  @Override
-  public void periodic() {
-      LogData();
-  }
+    @Override
+    public void periodic() {
+        LogData();
+    }
 
-  @Override
-  public void simulationPeriodic() {
+    @Override
+    public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-  }
+}
 }
